@@ -1,10 +1,9 @@
 import os
-import jwt
+from jose import jwt, JWTError
 from datetime import datetime, timedelta, timezone
 from typing import Optional, Union
 from passlib.context import CryptContext
 from passlib.hash import bcrypt
-from jose import JWTError
 from models import User, UserRole
 
 # Password hashing

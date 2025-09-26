@@ -74,10 +74,10 @@ fi
 
 # Check if Portainer is accessible
 print_status "Checking if Portainer is running..."
-if curl -s "http://$TRUENAS_IP:9000" > /dev/null; then
+if curl -s "http://$TRUENAS_IP:31015" > /dev/null; then
     print_success "Portainer is running!"
 else
-    print_warning "Cannot reach Portainer at http://$TRUENAS_IP:9000"
+    print_warning "Cannot reach Portainer at http://$TRUENAS_IP:31015"
     print_warning "Make sure Portainer is installed and running"
 fi
 
