@@ -112,7 +112,7 @@ services:
     networks:
       - proxy-net
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:3000"]
+      test: ["CMD", "curl", "-f", "http://localhost:8069"]
       interval: 30s
       timeout: 10s
       retries: 3
@@ -124,7 +124,7 @@ services:
         max-file: "3"
     # Auto-select available port to avoid conflicts
     ports:
-      - "3000-3100:3000"  # Range of ports to try
+      - "8069:8069"
 
   # Optional: Redis for rate limiting (uncomment if needed)
   # redis:
@@ -144,4 +144,4 @@ networks:
 
 # Health check and monitoring
 # The frontend is accessible via Cloudflare Tunnel at cipherdrive.ahmxd.net
-# Traffic flow: Cloudflare Tunnel -> frontend:3000 -> backend:8000 -> db:5432
+# Traffic flow: Cloudflare Tunnel -> frontend:8069 -> backend:8000 -> db:5432

@@ -77,7 +77,7 @@ app.add_middleware(
     CORSMiddleware,
     allow_origins=[
         "https://cipherdrive.ahmxd.net",
-        "http://localhost:3000",  # For development
+        "http://localhost:8069",  # For development
     ],
     allow_credentials=True,
     allow_methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"],

@@ -254,7 +254,7 @@ services:
     container_name: cipherdrive-frontend
     restart: unless-stopped
     ports:
-      - "3000:3000"
+      - "8069:8069"
     environment:
       VITE_API_BASE_URL: \${VITE_API_BASE_URL}
     depends_on:
@@ -263,7 +263,7 @@ services:
     networks:
       - proxy-net
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:3000/health"]
+      test: ["CMD", "curl", "-f", "http://localhost:8069/health"]
       interval: 30s
       timeout: 10s
       retries: 3
@@ -305,7 +305,7 @@ cat > CREDENTIALS.txt << EOF
 ================================
 
 🌐 Access your CipherDrive at:
-   http://$TRUENAS_IP:3000
+   http://$TRUENAS_IP:8069
 
 👨‍💼 Admin Login:
    Username: admin
@@ -332,7 +332,7 @@ echo -e "${GREEN}🎊 SETUP COMPLETE! 🎊${NC}"
 echo ""
 echo -e "${CYAN}🌟 Your CipherDrive is ready!${NC}"
 echo ""
-echo -e "${YELLOW}📍 Access it at: ${GREEN}http://$TRUENAS_IP:3000${NC}"
+echo -e "${YELLOW}📍 Access it at: ${GREEN}http://$TRUENAS_IP:8069${NC}"
 echo ""
 echo -e "${PURPLE}👨‍💼 Admin Login:${NC}"
 echo -e "   Username: ${GREEN}admin${NC}"
@@ -351,7 +351,7 @@ echo -e "${CYAN}🎉 Enjoy your new secure file sharing platform!${NC}"
 # Check if website is accessible
 print_status "Testing if your website is working..."
 sleep 5
-if curl -s "http://$TRUENAS_IP:3000" > /dev/null; then
+if curl -s "http://$TRUENAS_IP:8069" > /dev/null; then
     print_success "Website is UP and running! 🚀"
 else
     print_warning "Website might still be starting up. Give it a few more minutes."
