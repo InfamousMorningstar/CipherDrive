@@ -5,8 +5,8 @@ import {
   DocumentIcon,
   PhotoIcon,
   FilmIcon,
-  MusicIcon,
-  DownloadIcon,
+  MusicalNoteIcon,
+  ArrowDownTrayIcon,
   TrashIcon,
   ShareIcon,
   EyeIcon
@@ -112,7 +112,7 @@ const FileBrowser = () => {
       return <FilmIcon className="h-8 w-8 text-purple-500" />
     }
     if (mimeType.startsWith('audio/')) {
-      return <MusicIcon className="h-8 w-8 text-pink-500" />
+      return <MusicalNoteIcon className="h-8 w-8 text-pink-500" />
     }
     
     return <DocumentIcon className="h-8 w-8 text-gray-500" />
@@ -270,7 +270,7 @@ const FileBrowser = () => {
                           className="p-1 text-gray-500 hover:text-primary-600 transition-colors"
                           title="Download"
                         >
-                          <DownloadIcon className="h-4 w-4" />
+                          <ArrowDownTrayIcon className="h-4 w-4" />
                         </button>
                       )}
                       

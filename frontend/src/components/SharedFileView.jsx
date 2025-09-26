@@ -3,7 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import { 
   CloudIcon,
-  DownloadIcon,
+  ArrowDownTrayIcon,
   EyeIcon,
   LockClosedIcon,
   ExclamationTriangleIcon
@@ -231,7 +231,7 @@ const SharedFileView = () => {
                     disabled={downloading}
                     className={`w-full btn-primary ${downloading ? 'opacity-75 cursor-not-allowed' : ''}`}
                   >
-                    <DownloadIcon className="h-5 w-5 mr-2" />
+                    <ArrowDownTrayIcon className="h-5 w-5 mr-2" />
                     {downloading ? 'Downloading...' : 'Download File'}
                   </button>
 
