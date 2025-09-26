@@ -72,6 +72,11 @@ if ! command_exists docker; then
     exit 1
 fi
 
+if ! command_exists git; then
+    print_error "Git is not installed. Installing..."
+    apt-get update && apt-get install -y git
+fi
+
 # Check if Portainer is accessible
 print_status "Checking if Portainer is running..."
 if curl -s "http://$TRUENAS_IP:31015" > /dev/null; then
@@ -185,8 +190,6 @@ print_success "Environment file created!"
 # Create simplified docker-compose.yml for auto-deployment
 print_status "${DOCKER} Creating Docker Compose configuration..."
 cat > docker-compose-auto.yml << EOF
-version: '3.8'
-
 services:
   # Database
   db:
@@ -277,6 +280,24 @@ volumes:
     driver: local
 EOF
 print_success "Docker Compose configuration created!"
+
+# Download source code
+print_status "📥 Downloading CipherDrive source code..."
+if [ -d "CipherDrive" ]; then
+    print_status "Updating existing repository..."
+    cd CipherDrive
+    git pull origin main
+    cd ..
+else
+    print_status "Cloning repository..."
+    git clone https://github.com/InfamousMorningstar/CipherDrive.git
+fi
+
+# Copy source files to current directory for Docker build
+print_status "📂 Preparing source files for deployment..."
+cp -r CipherDrive/backend ./
+cp -r CipherDrive/frontend ./
+print_success "Source code ready!"
 
 # Deploy the stack
 print_status "${ROCKET} Deploying CipherDrive..."
