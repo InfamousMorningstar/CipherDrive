@@ -3,10 +3,9 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { 
   CloudIcon, 
   UserIcon, 
-  CogIcon,
   MoonIcon,
   SunIcon,
-  LogoutIcon,
+  ArrowRightOnRectangleIcon,
   PlusIcon
 } from '@heroicons/react/24/outline'
 
@@ -133,7 +132,7 @@ const Dashboard = () => {
                 className="p-2 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
                 title="Logout"
               >
-                <LogoutIcon className="h-5 w-5" />
+                <ArrowRightOnRectangleIcon className="h-5 w-5" />
               </button>
             </div>
           </div>
