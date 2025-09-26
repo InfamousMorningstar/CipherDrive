@@ -1,0 +1,147 @@
+version: '3.8'
+
+services:
+  # PostgreSQL 16 Database
+  db:
+    image: postgres:16
+    container_name: cipherdrive_db
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-cipherdrive_db}
+      POSTGRES_USER: ${POSTGRES_USER:-cipherdrive_user}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-cipherdrive_pass}
+      POSTGRES_INITDB_ARGS: "--encoding=UTF-8 --lc-collate=en_US.UTF-8 --lc-ctype=en_US.UTF-8"
+    volumes:
+      - /mnt/app-pool/cipherdrive/database:/var/lib/postgresql/data
+      - ./db/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-cipherdrive_user} -d ${POSTGRES_DB:-cipherdrive_db}"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+    networks:
+      - proxy-net
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  # FastAPI Backend
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: cipherdrive_backend
+    restart: unless-stopped
+    environment:
+      # Database Configuration
+      DATABASE_URL: postgresql://${POSTGRES_USER:-cipherdrive_user}:${POSTGRES_PASSWORD:-cipherdrive_pass}@db:5432/${POSTGRES_DB:-cipherdrive_db}
+      
+      # JWT Configuration
+      JWT_SECRET: ${JWT_SECRET:-your-super-secret-jwt-key-change-in-production}
+      
+      # SMTP Configuration (Optional)
+      SMTP_HOST: ${SMTP_HOST:-}
+      SMTP_PORT: ${SMTP_PORT:-587}
+      SMTP_USER: ${SMTP_USER:-}
+      SMTP_PASS: ${SMTP_PASS:-}
+      SMTP_USE_TLS: ${SMTP_USE_TLS:-true}
+      FROM_EMAIL: ${FROM_EMAIL:-noreply@cipherdrive.ahmxd.net}
+      FROM_NAME: ${FROM_NAME:-CipherDrive}
+      
+      # Application Configuration
+      FRONTEND_URL: https://cipherdrive.ahmxd.net
+      ADMIN_EMAIL: ${ADMIN_EMAIL:-admin@cipherdrive.local}
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD:-changeme123}
+      
+      # Redis Configuration (Optional for rate limiting)
+      REDIS_URL: ${REDIS_URL:-}
+      
+      # Production settings
+      PYTHONPATH: /app
+      PYTHONUNBUFFERED: 1
+    volumes:
+      # Configuration and logs
+      - /mnt/app-pool/cipherdrive/config:/app/config
+      - /mnt/app-pool/cipherdrive/logs:/mnt/app-pool/cipherdrive/logs
+      
+      # User data storage
+      - /mnt/Centauri/cipherdrive/users:/data/users
+      - /mnt/Centauri/cipherdrive/shares:/data/shares
+      - /mnt/Centauri/cipherdrive/uploads:/data/uploads
+      
+      # Media for cipher user (read-only)
+      - /mnt/Centauri/movies:/data/movies:ro
+      - /mnt/Centauri/tv:/data/tv:ro
+    depends_on:
+      db:
+        condition: service_healthy
+    networks:
+      - proxy-net
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+    # Auto-select available port to avoid conflicts
+    ports:
+      - "8000-8100:8000"  # Range of ports to try
+
+  # React Frontend
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+      args:
+        VITE_API_BASE_URL: /api
+    container_name: cipherdrive_frontend
+    restart: unless-stopped
+    environment:
+      NODE_ENV: production
+      VITE_API_BASE_URL: /api
+    depends_on:
+      - backend
+    networks:
+      - proxy-net
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+    # Auto-select available port to avoid conflicts
+    ports:
+      - "3000-3100:3000"  # Range of ports to try
+
+  # Optional: Redis for rate limiting (uncomment if needed)
+  # redis:
+  #   image: redis:7-alpine
+  #   container_name: cipherdrive_redis
+  #   restart: unless-stopped
+  #   volumes:
+  #     - /mnt/app-pool/cipherdrive/redis:/data
+  #   networks:
+  #     - proxy-net
+  #   command: redis-server --appendonly yes --maxmemory 256mb --maxmemory-policy allkeys-lru
+
+# External network (must be created in Portainer before deployment)
+networks:
+  proxy-net:
+    external: true
+
+# Health check and monitoring
+# The frontend is accessible via Cloudflare Tunnel at cipherdrive.ahmxd.net
+# Traffic flow: Cloudflare Tunnel -> frontend:3000 -> backend:8000 -> db:5432
