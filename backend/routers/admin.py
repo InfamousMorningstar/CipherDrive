@@ -353,10 +353,10 @@ async def get_disk_usage(
 
 @router.delete("/audit-logs/cleanup")
 async def cleanup_audit_logs(
-    days: int = 90,
     request: Request,
     db: Session = Depends(get_db),
-    current_user: User = Depends(get_admin_user)
+    current_user: User = Depends(get_admin_user),
+    days: int = 90
 ):
     """Clean up old audit logs (admin only)"""
     
