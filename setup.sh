@@ -245,23 +245,23 @@ cat > "$APP_DIR/manage.sh" << EOF
 case \$1 in
     start)
         echo "Starting Dropbox Lite..."
-        cd $APP_DIR && docker-compose up -d
+        cd $APP_DIR && docker compose up -d
         ;;
     stop)
         echo "Stopping Dropbox Lite..."
-        cd $APP_DIR && docker-compose down
+        cd $APP_DIR && docker compose down
         ;;
     restart)
         echo "Restarting Dropbox Lite..."
-        cd $APP_DIR && docker-compose restart
+        cd $APP_DIR && docker compose restart
         ;;
     logs)
         echo "Showing logs..."
-        cd $APP_DIR && docker-compose logs -f
+        cd $APP_DIR && docker compose logs -f
         ;;
     status)
         echo "Checking status..."
-        cd $APP_DIR && docker-compose ps
+        cd $APP_DIR && docker compose ps
         ;;
     backup)
         echo "Running backup..."
@@ -273,7 +273,7 @@ case \$1 in
         ;;
     update)
         echo "Updating Dropbox Lite..."
-        cd $APP_DIR && docker-compose pull && docker-compose up -d
+        cd $APP_DIR && docker compose pull && docker compose up -d
         ;;
     clean)
         echo "Cleaning up unused images..."
@@ -373,7 +373,7 @@ echo "   - Backend: $APP_DIR/backend/"
 echo "   - Frontend: $APP_DIR/frontend/"
 echo ""
 echo "2. To start with Docker Compose:"
-echo "   cd $APP_DIR && docker-compose up -d"
+echo "   cd $APP_DIR && docker compose up -d"
 echo ""
 echo "3. To use with Portainer:"
 echo "   - Copy content from $APP_DIR/portainer-stack.yml"

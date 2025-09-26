@@ -285,14 +285,14 @@ echo -e "${YELLOW}🎬 Starting the magic show...${NC}"
 echo ""
 
 # Build and start services
-docker-compose -f docker-compose-auto.yml up -d --build
+docker compose -f docker-compose-auto.yml up -d --build
 
 print_status "Waiting for services to start..."
 sleep 30
 
 # Check if services are running
 print_status "Checking service health..."
-if docker-compose -f docker-compose-auto.yml ps | grep -q "Up"; then
+if docker compose -f docker-compose-auto.yml ps | grep -q "Up"; then
     print_success "Services are running!"
 else
     print_warning "Some services might not be ready yet..."
@@ -355,7 +355,7 @@ if curl -s "http://$TRUENAS_IP:8069" > /dev/null; then
     print_success "Website is UP and running! 🚀"
 else
     print_warning "Website might still be starting up. Give it a few more minutes."
-    print_warning "If it doesn't work, check: docker-compose -f docker-compose-auto.yml logs"
+    print_warning "If it doesn't work, check: docker compose -f docker-compose-auto.yml logs"
 fi
 
 echo ""
