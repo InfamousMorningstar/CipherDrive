@@ -1,314 +1,624 @@
-# CipherDrive# Dropbox Lite - Secure File Sharing Platform
+# CipherDrive# CipherDrive# Dropbox Lite - Secure File Sharing Platform
 
 
 
-A secure, feature-rich file sharing platform designed for TrueNAS SCALE deployment with Cloudflare Tunnel integration.A modern, lightweight file sharing and storage solution designed for deployment on TrueNAS SCALE servers using Docker and Portainer. Built with FastAPI backend, React frontend, and PostgreSQL database.
+A secure, feature-rich file sharing platform designed for TrueNAS SCALE deployment with Cloudflare Tunnel integration.
 
 
 
-## 🚀 Features## 🚀 Features
+## FeaturesA secure, feature-rich file sharing platform designed for TrueNAS SCALE deployment with Cloudflare Tunnel integration.A modern, lightweight file sharing and storage solution designed for deployment on TrueNAS SCALE servers using Docker and Portainer. Built with FastAPI backend, React frontend, and PostgreSQL database.
 
 
 
-- **Role-Based Access Control**: Admin, normal user, and cipher (download-only) user roles### Core Features
+- **Role-Based Access Control**: Admin, normal user, and cipher (download-only) user roles
 
-- **Secure File Sharing**: Expiring links with download limits- **Secure Authentication**: JWT-based auth with bcrypt password hashing
+- **Secure File Sharing**: Expiring links with download limits
 
-- **Comprehensive Audit Logging**: Track all user activities and file operations- **File Management**: Upload, download, organize files in folders
+- **Comprehensive Audit Logging**: Track all user activities and file operations## 🚀 Features## 🚀 Features
 
-- **Storage Quotas**: Configurable per-user storage limits- **File Sharing**: Generate shareable links with expiry dates and download limits
+- **Storage Quotas**: Configurable per-user storage limits
 
-- **Multi-Format Support**: Images, videos, audio, documents, and more- **User Management**: Admin panel for user administration and quota management
+- **Multi-Format Support**: Images, videos, audio, documents, and more
 
-- **Modern UI**: React frontend with TailwindCSS and Framer Motion- **File Preview**: Built-in preview for images, text files, and PDFs
+- **Modern UI**: React frontend with TailwindCSS and Framer Motion
 
-- **Docker Ready**: Full containerization with Docker Compose- **Responsive UI**: Modern, mobile-friendly interface with dark/light themes
+- **Docker Ready**: Full containerization with Docker Compose- **Role-Based Access Control**: Admin, normal user, and cipher (download-only) user roles### Core Features
 
 - **TrueNAS Integration**: Optimized for TrueNAS SCALE datasets
 
-- **Cloudflare Tunnel**: Secure external access without port forwarding### Security Features
+- **Cloudflare Tunnel**: Secure external access without port forwarding- **Secure File Sharing**: Expiring links with download limits- **Secure Authentication**: JWT-based auth with bcrypt password hashing
 
-- CSRF and XSS protection
 
-## 🏗️ Architecture- Rate limiting to prevent abuse
 
-- Security headers (CSP, HSTS, etc.)
+## Quick Start- **Comprehensive Audit Logging**: Track all user activities and file operations- **File Management**: Upload, download, organize files in folders
+
+
+
+### Automated Setup (Recommended)- **Storage Quotas**: Configurable per-user storage limits- **File Sharing**: Generate shareable links with expiry dates and download limits
+
+
+
+For TrueNAS SCALE, use the automated setup script:- **Multi-Format Support**: Images, videos, audio, documents, and more- **User Management**: Admin panel for user administration and quota management
+
+
+
+```bash- **Modern UI**: React frontend with TailwindCSS and Framer Motion- **File Preview**: Built-in preview for images, text files, and PDFs
+
+# Make script executable
+
+chmod +x auto-setup.sh- **Docker Ready**: Full containerization with Docker Compose- **Responsive UI**: Modern, mobile-friendly interface with dark/light themes
+
+
+
+# Run the setup- **TrueNAS Integration**: Optimized for TrueNAS SCALE datasets
+
+./auto-setup.sh
+
+```- **Cloudflare Tunnel**: Secure external access without port forwarding### Security Features
+
+
+
+The script will:- CSRF and XSS protection
+
+- Create all necessary TrueNAS datasets
+
+- Generate secure passwords## 🏗️ Architecture- Rate limiting to prevent abuse
+
+- Set up Docker networks
+
+- Deploy all services- Security headers (CSP, HSTS, etc.)
+
+- Provide login credentials
 
 ### Backend (FastAPI)- File type and size validation
 
+### Manual Setup
+
 - **Authentication**: JWT tokens with bcrypt password hashing- Audit logging for all operations
+
+#### 1. Prerequisites
 
 - **Database**: PostgreSQL 16 with SQLAlchemy ORM- Password strength validation
 
-- **Security**: Rate limiting, CSRF protection, security headers
+- TrueNAS SCALE 22.02 or later
+
+- Docker and Docker Compose- **Security**: Rate limiting, CSRF protection, security headers
+
+- Cloudflare account (for tunnel setup)
 
 - **File Management**: Upload, download, delete with quota enforcement### Admin Features
 
+#### 2. Create TrueNAS Datasets
+
 - **Sharing**: Secure links with expiration and download limits- User management and quota control
 
-- **Audit Trail**: Comprehensive logging to file and database- System monitoring and audit logs
+```bash
 
-- Bulk operations and file management
-
-### Frontend (React + Vite)- Storage analytics and reporting
-
-- **Modern Stack**: React 18, TailwindCSS, Framer Motion
-
-- **Responsive Design**: Mobile-first approach## 🏗️ Architecture
-
-- **Real-time Updates**: WebSocket integration
-
-- **File Preview**: Support for images, videos, documents```
-
-- **Admin Panel**: User management and system monitoringdropbox-lite/
-
-├── backend/                 # FastAPI backend
-
-## 📋 Prerequisites│   ├── app/
-
-│   │   ├── main.py         # FastAPI application
-
-- TrueNAS SCALE 22.02 or later│   │   ├── auth.py         # Authentication & JWT
-
-- Docker and Docker Compose│   │   ├── users.py        # User management
-
-- Cloudflare account (for tunnel setup)│   │   ├── files.py        # File operations
-
-- SMTP server (for email notifications)│   │   ├── models.py       # SQLAlchemy models
-
-│   │   ├── database.py     # Database configuration
-
-## 🚀 Quick Start│   │   ├── security.py     # Security middleware
-
-│   │   └── utils.py        # Utility functions
-
-### 1. Clone the Repository│   ├── uploads/            # File storage directory
-
-│   ├── Dockerfile          # Backend container config
-
-```bash│   └── requirements.txt    # Python dependencies
-
-git clone https://github.com/yourusername/CipherDrive.git├── frontend/               # React frontend
-
-cd CipherDrive│   ├── src/
-
-```│   │   ├── components/     # React components
-
-│   │   ├── store/          # Zustand state management
-
-### 2. Configure Environment│   │   └── utils/          # Frontend utilities
-
-│   ├── Dockerfile          # Frontend container config
-
-```bash│   └── package.json        # Node.js dependencies
-
-# Copy the example environment file├── docker-compose.yml      # Multi-service orchestration
-
-cp .env.example .env└── .env.example           # Environment variables template
-
-```
-
-# Edit the environment file with your settings
-
-nano .env## 📋 Prerequisites
-
-```
-
-### For TrueNAS SCALE Deployment:
-
-Key configuration items:- TrueNAS SCALE 22.02 or later
-
-- `JWT_SECRET_KEY`: Generate with `openssl rand -hex 32`- Portainer CE installed and configured
-
-- `POSTGRES_PASSWORD`: Use a strong database password- At least 2GB RAM allocated for the application
-
-- `ADMIN_PASSWORD`: Set admin user password- 10GB+ storage space for uploads
-
-- `CIPHER_PASSWORD`: Set cipher user password
-
-- `SMTP_*`: Configure email settings### For Development:
-
-- `TRUENAS_*_PATH`: Adjust for your dataset paths- Docker and Docker Compose
-
-- Node.js 18+ (for frontend development)
-
-### 3. Set Up TrueNAS Datasets- Python 3.9+ (for backend development)
-
-- PostgreSQL (for database)
-
-Create the following datasets in TrueNAS:
-
-```bash## 🚢 Deployment on TrueNAS SCALE
+# Create datasets in TrueNAS web interface:- **Audit Trail**: Comprehensive logging to file and database- System monitoring and audit logs
 
 /mnt/app-pool/cipherdrive/uploads    # User uploads
 
-/mnt/Centauri/cipherdrive/movies     # Cipher user movies### Method 1: Using Portainer (Recommended)
+/mnt/Centauri/cipherdrive/movies     # Cipher user movies- Bulk operations and file management
 
 /mnt/Centauri/cipherdrive/tv         # Cipher user TV shows
 
-```1. **Access Portainer**
-
-   - Navigate to your TrueNAS SCALE Portainer interface
-
-### 4. Create External Network   - Usually accessible at `http://your-truenas-ip:9000`
+```### Frontend (React + Vite)- Storage analytics and reporting
 
 
 
-```bash2. **Create Docker Network**
-
-# Create the proxy network for Cloudflare Tunnel   ```bash
-
-docker network create proxy-net   # In Portainer Console or TrueNAS Shell
-
-```   docker network create dropbox-lite-network
-
-   ```
-
-### 5. Deploy with Docker Compose
-
-3. **Setup Environment Variables**
-
-```bash   - In Portainer, go to "Stacks" → "Add Stack"
-
-# Start all services   - Name: `dropbox-lite`
-
-docker-compose up -d   - Copy the docker-compose.yml content below
+#### 3. Configure Environment- **Modern Stack**: React 18, TailwindCSS, Framer Motion
 
 
 
-# Check logs4. **Configure Storage**
+```bash- **Responsive Design**: Mobile-first approach## 🏗️ Architecture
 
-docker-compose logs -f   ```yaml
+# Copy and edit environment file
 
-   # Add to your docker-compose.yml volumes section
+cp .env.example .env- **Real-time Updates**: WebSocket integration
 
-# Check service status   volumes:
+nano .env
 
-docker-compose ps     postgres_data:
+```- **File Preview**: Support for images, videos, documents```
 
-```       driver: local
 
-       driver_opts:
 
-## 🔧 TrueNAS SCALE Deployment         type: none
+Key settings to change:- **Admin Panel**: User management and system monitoringdropbox-lite/
 
-         o: bind
+- `JWT_SECRET_KEY`: Generate with `openssl rand -hex 32`
 
-### Option 1: Portainer (Recommended)         device: /mnt/your-pool/dropbox-lite/postgres
+- `POSTGRES_PASSWORD`: Use a strong database password├── backend/                 # FastAPI backend
 
-     uploads:
+- `ADMIN_PASSWORD`: Set admin user password
 
-1. **Install Portainer** from TrueNAS SCALE Apps       driver: local  
+- `CIPHER_PASSWORD`: Set cipher user password## 📋 Prerequisites│   ├── app/
 
-2. **Create Stack**:       driver_opts:
 
-   - Name: `cipherdrive`         type: none
 
-   - Compose file: Copy contents of `docker-compose.yml`         o: bind
+#### 4. Deploy│   │   ├── main.py         # FastAPI application
 
-   - Environment variables: Copy from `.env`         device: /mnt/your-pool/dropbox-lite/uploads
 
-   ```
 
-3. **Configure Volumes**:
-
-   - Ensure dataset paths exist: `/mnt/app-pool/cipherdrive/uploads`5. **Deploy Stack**
-
-   - Set proper permissions: `chown -R 1000:1000 /mnt/app-pool/cipherdrive`   - Paste the configuration and click "Deploy the stack"
-
-   - Wait for all services to start (check logs for any issues)
-
-### Option 2: CLI Deployment
-
-### Method 2: Command Line Deployment
-
-```bash
-
-# SSH into TrueNAS SCALE1. **Prepare Directories**
-
-ssh admin@your-truenas-ip   ```bash
-
-   # Create app directory
-
-# Create project directory   mkdir -p /mnt/your-pool/dropbox-lite
-
-mkdir -p /mnt/app-pool/cipherdrive-config   cd /mnt/your-pool/dropbox-lite
-
-cd /mnt/app-pool/cipherdrive-config   
-
-   # Create required directories
-
-# Upload docker-compose.yml and .env files   mkdir -p postgres uploads
-
-# (Use SCP or web interface)   chmod 755 uploads
-
-   ```
+```bash- TrueNAS SCALE 22.02 or later│   │   ├── auth.py         # Authentication & JWT
 
 # Create external network
 
-docker network create proxy-net2. **Download Application**
-
-   ```bash
-
-# Start services   # Clone or copy the application files
-
-docker-compose up -d   git clone <your-repo> .
-
-```   # OR upload the project files manually
-
-   ```
-
-## 🌐 Cloudflare Tunnel Setup
-
-3. **Configure Environment**
-
-### 1. Create Tunnel   ```bash
-
-   # Copy and edit environment variables
-
-```bash   cp .env.example .env
-
-# Install cloudflared   nano .env
-
-curl -L --output cloudflared.deb https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-amd64.deb   ```
-
-sudo dpkg -i cloudflared.deb
-
-4. **Deploy Services**
-
-# Login to Cloudflare   ```bash
-
-cloudflared tunnel login   docker-compose up -d
-
-   ```
-
-# Create tunnel
-
-cloudflared tunnel create cipherdrive## ⚙️ Configuration
+docker network create proxy-net- Docker and Docker Compose│   │   ├── users.py        # User management
 
 
 
-# Note the tunnel ID from output### Environment Variables
+# Start services- Cloudflare account (for tunnel setup)│   │   ├── files.py        # File operations
 
-```
+docker-compose up -d
 
-Create a `.env` file with the following variables:
+```- SMTP server (for email notifications)│   │   ├── models.py       # SQLAlchemy models
 
-### 2. Configure DNS
+
+
+## User Roles│   │   ├── database.py     # Database configuration
+
+
+
+### Admin User## 🚀 Quick Start│   │   ├── security.py     # Security middleware
+
+- **Username**: admin (configurable)
+
+- **Capabilities**: Full system access, user management, all file operations│   │   └── utils.py        # Utility functions
+
+- **Default Quota**: 100GB
+
+### 1. Clone the Repository│   ├── uploads/            # File storage directory
+
+### Regular User  
+
+- **Capabilities**: File upload/download, sharing, personal storage│   ├── Dockerfile          # Backend container config
+
+- **Default Quota**: 10GB
+
+```bash│   └── requirements.txt    # Python dependencies
+
+### Cipher User
+
+- **Username**: cipher (configurable)git clone https://github.com/yourusername/CipherDrive.git├── frontend/               # React frontend
+
+- **Capabilities**: Download-only access to movies and TV shows
+
+- **Quota**: Unlimitedcd CipherDrive│   ├── src/
+
+- **Restrictions**: Cannot upload files or create shares
+
+```│   │   ├── components/     # React components
+
+## TrueNAS SCALE Deployment
+
+│   │   ├── store/          # Zustand state management
+
+### Option 1: Portainer (Recommended)
+
+### 2. Configure Environment│   │   └── utils/          # Frontend utilities
+
+1. Install Portainer from TrueNAS SCALE Apps
+
+2. Create Stack named `cipherdrive`│   ├── Dockerfile          # Frontend container config
+
+3. Copy `docker-compose.yml` content
+
+4. Set environment variables from `.env````bash│   └── package.json        # Node.js dependencies
+
+5. Deploy stack
+
+# Copy the example environment file├── docker-compose.yml      # Multi-service orchestration
+
+### Option 2: CLI Deployment
+
+cp .env.example .env└── .env.example           # Environment variables template
 
 ```bash
 
-In Cloudflare Dashboard:# Database Configuration
+# SSH into TrueNAS SCALE```
 
-1. Go to **DNS** sectionDATABASE_URL=postgresql://dropbox_user:secure_password@postgres:5432/dropbox_lite
+ssh admin@your-truenas-ip
 
-2. Add CNAME record:POSTGRES_USER=dropbox_user
+# Edit the environment file with your settings
 
-   - Name: `files` (or your preferred subdomain)POSTGRES_PASSWORD=secure_password
+# Navigate to app directory
 
-   - Target: `TUNNEL-ID.cfargotunnel.com`POSTGRES_DB=dropbox_lite
+cd /mnt/app-pool/cipherdrive-confignano .env## 📋 Prerequisites
 
 
+
+# Upload project files (docker-compose.yml, .env)```
+
+# Create network and deploy
+
+docker network create proxy-net### For TrueNAS SCALE Deployment:
+
+docker-compose up -d
+
+```Key configuration items:- TrueNAS SCALE 22.02 or later
+
+
+
+## Cloudflare Tunnel Setup- `JWT_SECRET_KEY`: Generate with `openssl rand -hex 32`- Portainer CE installed and configured
+
+
+
+### 1. Create Tunnel- `POSTGRES_PASSWORD`: Use a strong database password- At least 2GB RAM allocated for the application
+
+
+
+```bash- `ADMIN_PASSWORD`: Set admin user password- 10GB+ storage space for uploads
+
+# Install cloudflared
+
+curl -L --output cloudflared.deb https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-amd64.deb- `CIPHER_PASSWORD`: Set cipher user password
+
+sudo dpkg -i cloudflared.deb
+
+- `SMTP_*`: Configure email settings### For Development:
+
+# Login and create tunnel
+
+cloudflared tunnel login- `TRUENAS_*_PATH`: Adjust for your dataset paths- Docker and Docker Compose
+
+cloudflared tunnel create cipherdrive
+
+```- Node.js 18+ (for frontend development)
+
+
+
+### 2. Configure DNS### 3. Set Up TrueNAS Datasets- Python 3.9+ (for backend development)
+
+
+
+In Cloudflare Dashboard:- PostgreSQL (for database)
+
+- Add CNAME record pointing to your tunnel
+
+- Name: `files` (or preferred subdomain)Create the following datasets in TrueNAS:
+
+- Target: `TUNNEL-ID.cfargotunnel.com`
+
+```bash## 🚢 Deployment on TrueNAS SCALE
+
+### 3. Configure Ingress
+
+/mnt/app-pool/cipherdrive/uploads    # User uploads
+
+Create tunnel configuration:
+
+```yaml/mnt/Centauri/cipherdrive/movies     # Cipher user movies### Method 1: Using Portainer (Recommended)
+
+tunnel: TUNNEL-ID
+
+credentials-file: /root/.cloudflared/TUNNEL-ID.json/mnt/Centauri/cipherdrive/tv         # Cipher user TV shows
+
+
+
+ingress:```1. **Access Portainer**
+
+  - hostname: files.yourdomain.com
+
+    service: http://cipherdrive-frontend:3000   - Navigate to your TrueNAS SCALE Portainer interface
+
+  - service: http_status:404
+
+```### 4. Create External Network   - Usually accessible at `http://your-truenas-ip:9000`
+
+
+
+## Configuration
+
+
+
+### Environment Variables```bash2. **Create Docker Network**
+
+
+
+Key configuration options in `.env`:# Create the proxy network for Cloudflare Tunnel   ```bash
+
+
+
+```bashdocker network create proxy-net   # In Portainer Console or TrueNAS Shell
+
+# Security
+
+JWT_SECRET_KEY=your-jwt-secret```   docker network create dropbox-lite-network
+
+POSTGRES_PASSWORD=your-db-password
+
+   ```
+
+# Users  
+
+ADMIN_USERNAME=admin### 5. Deploy with Docker Compose
+
+ADMIN_PASSWORD=your-admin-password
+
+CIPHER_USERNAME=cipher3. **Setup Environment Variables**
+
+CIPHER_PASSWORD=your-cipher-password
+
+```bash   - In Portainer, go to "Stacks" → "Add Stack"
+
+# Storage
+
+MAX_FILE_SIZE_BYTES=104857600  # 100MB# Start all services   - Name: `dropbox-lite`
+
+DEFAULT_USER_QUOTA=10737418240  # 10GB
+
+docker-compose up -d   - Copy the docker-compose.yml content below
+
+# Email (optional)
+
+SMTP_HOST=smtp.gmail.com
+
+SMTP_USERNAME=your-email@gmail.com
+
+SMTP_PASSWORD=your-app-password# Check logs4. **Configure Storage**
+
+```
+
+docker-compose logs -f   ```yaml
+
+### File Storage Paths
+
+   # Add to your docker-compose.yml volumes section
+
+```
+
+/mnt/app-pool/cipherdrive/uploads/  # User uploads# Check service status   volumes:
+
+/mnt/Centauri/cipherdrive/movies/   # Movies (cipher access)
+
+/mnt/Centauri/cipherdrive/tv/       # TV shows (cipher access)docker-compose ps     postgres_data:
+
+/mnt/app-pool/cipherdrive/logs/     # Application logs
+
+``````       driver: local
+
+
+
+## Security Features       driver_opts:
+
+
+
+- **JWT Authentication** with access and refresh tokens## 🔧 TrueNAS SCALE Deployment         type: none
+
+- **bcrypt Password Hashing** for secure credential storage
+
+- **Rate Limiting** on sensitive endpoints         o: bind
+
+- **CSRF Protection** for web requests
+
+- **Security Headers** (HSTS, CSP, X-Frame-Options)### Option 1: Portainer (Recommended)         device: /mnt/your-pool/dropbox-lite/postgres
+
+- **Input Validation** and sanitization
+
+- **Comprehensive Audit Logging** to file and database     uploads:
+
+
+
+## Monitoring1. **Install Portainer** from TrueNAS SCALE Apps       driver: local  
+
+
+
+### Health Checks2. **Create Stack**:       driver_opts:
+
+
+
+```bash   - Name: `cipherdrive`         type: none
+
+# Check service health
+
+curl http://your-ip:3000/api/health   - Compose file: Copy contents of `docker-compose.yml`         o: bind
+
+
+
+# View logs   - Environment variables: Copy from `.env`         device: /mnt/your-pool/dropbox-lite/uploads
+
+docker-compose logs -f backend
+
+docker exec cipherdrive-backend tail -f /app/logs/audit.log   ```
+
+```
+
+3. **Configure Volumes**:
+
+### Database Maintenance
+
+   - Ensure dataset paths exist: `/mnt/app-pool/cipherdrive/uploads`5. **Deploy Stack**
+
+```bash
+
+# Backup database   - Set proper permissions: `chown -R 1000:1000 /mnt/app-pool/cipherdrive`   - Paste the configuration and click "Deploy the stack"
+
+docker exec cipherdrive-db pg_dump -U cipherdrive_user cipherdrive_db > backup.sql
+
+   - Wait for all services to start (check logs for any issues)
+
+# View database stats
+
+docker exec cipherdrive-backend python -c "from app.database import get_database_stats; print(get_database_stats())"### Option 2: CLI Deployment
+
+```
+
+### Method 2: Command Line Deployment
+
+## Troubleshooting
+
+```bash
+
+### Common Issues
+
+# SSH into TrueNAS SCALE1. **Prepare Directories**
+
+**Permission denied errors:**
+
+```bashssh admin@your-truenas-ip   ```bash
+
+sudo chown -R 1000:1000 /mnt/app-pool/cipherdrive
+
+sudo chown -R 1000:1000 /mnt/Centauri/cipherdrive   # Create app directory
+
+```
+
+# Create project directory   mkdir -p /mnt/your-pool/dropbox-lite
+
+**Database connection issues:**
+
+- Verify PostgreSQL container is runningmkdir -p /mnt/app-pool/cipherdrive-config   cd /mnt/your-pool/dropbox-lite
+
+- Check database credentials in `.env`
+
+- Ensure network connectivity between containerscd /mnt/app-pool/cipherdrive-config   
+
+
+
+**File upload issues:**   # Create required directories
+
+- Check available disk space
+
+- Verify upload directory permissions# Upload docker-compose.yml and .env files   mkdir -p postgres uploads
+
+- Review file size limits in configuration
+
+# (Use SCP or web interface)   chmod 755 uploads
+
+### Debug Mode
+
+   ```
+
+Enable detailed logging:
+
+```bash# Create external network
+
+# In .env file
+
+DEBUG=truedocker network create proxy-net2. **Download Application**
+
+LOG_LEVEL=DEBUG
+
+   ```bash
+
+# Restart services
+
+docker-compose restart# Start services   # Clone or copy the application files
+
+```
+
+docker-compose up -d   git clone <your-repo> .
+
+## API Documentation
+
+```   # OR upload the project files manually
+
+Interactive API documentation available at:
+
+- Swagger UI: `http://your-ip:3000/api/docs`   ```
+
+- ReDoc: `http://your-ip:3000/api/redoc`
+
+## 🌐 Cloudflare Tunnel Setup
+
+## Development
+
+3. **Configure Environment**
+
+### Local Development
+
+### 1. Create Tunnel   ```bash
+
+```bash
+
+# Backend   # Copy and edit environment variables
+
+cd backend
+
+python -m venv venv```bash   cp .env.example .env
+
+source venv/bin/activate
+
+pip install -r requirements.txt# Install cloudflared   nano .env
+
+uvicorn app.main:app --reload
+
+curl -L --output cloudflared.deb https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-amd64.deb   ```
+
+# Frontend  
+
+cd frontendsudo dpkg -i cloudflared.deb
+
+npm install
+
+npm run dev4. **Deploy Services**
+
+```
+
+# Login to Cloudflare   ```bash
+
+### Testing
+
+cloudflared tunnel login   docker-compose up -d
+
+```bash
+
+# Backend tests   ```
+
+cd backend
+
+pytest# Create tunnel
+
+
+
+# Frontend testscloudflared tunnel create cipherdrive## ⚙️ Configuration
+
+cd frontend  
+
+npm test
+
+```
+
+# Note the tunnel ID from output### Environment Variables
+
+## Contributing
+
+```
+
+1. Fork the repository
+
+2. Create a feature branchCreate a `.env` file with the following variables:
+
+3. Make changes with tests
+
+4. Submit a pull request### 2. Configure DNS
+
+
+
+## License```bash
+
+
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.In Cloudflare Dashboard:# Database Configuration
+
+
+
+## Support1. Go to **DNS** sectionDATABASE_URL=postgresql://dropbox_user:secure_password@postgres:5432/dropbox_lite
+
+
+
+- **Issues**: Open an issue on GitHub2. Add CNAME record:POSTGRES_USER=dropbox_user
+
+- **Documentation**: Check this README and inline code comments
+
+- **Security**: Report security issues privately to the maintainers   - Name: `files` (or your preferred subdomain)POSTGRES_PASSWORD=secure_password
+
+
+
+---   - Target: `TUNNEL-ID.cfargotunnel.com`POSTGRES_DB=dropbox_lite
+
+
+
+**CipherDrive** - Secure file sharing for the modern age 🔐
 
 ### 3. Configure Tunnel# JWT Configuration
 
