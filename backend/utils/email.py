@@ -1,8 +1,7 @@
 import os
 import asyncio
 import aiosmtplib
-from email.mime.text import MimeText
-from email.mime.multipart import MimeMultipart
+from email.message import EmailMessage
 from typing import Optional
 import logging
 
@@ -31,19 +30,18 @@ async def send_email(
         return False
     
     try:
-        # Create message
-        message = MimeMultipart("alternative")
+        # Create message using EmailMessage
+        message = EmailMessage()
         message["Subject"] = subject
         message["From"] = f"{FROM_NAME} <{FROM_EMAIL}>"
         message["To"] = to_email
         
-        # Add text and HTML parts
+        # Set the content
         if text_body:
-            text_part = MimeText(text_body, "plain")
-            message.attach(text_part)
-        
-        html_part = MimeText(html_body, "html")
-        message.attach(html_part)
+            message.set_content(text_body)
+            message.add_alternative(html_body, subtype="html")
+        else:
+            message.set_content(html_body, subtype="html")
         
         # Send email
         await aiosmtplib.send(
