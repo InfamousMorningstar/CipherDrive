@@ -82,16 +82,20 @@ services:
       PYTHONPATH: /app
       PYTHONUNBUFFERED: 1
       ENVIRONMENT: production
+      SKIP_DIRECTORY_CHECK: true
     volumes:
-      # User data storage on HDD
+      # Mount TrueNAS paths directly so the app can see them
+      - /mnt/app-pool/cipherdrive/config:/mnt/app-pool/cipherdrive/config
+      - /mnt/app-pool/cipherdrive/logs:/mnt/app-pool/cipherdrive/logs
+      - /mnt/Centauri/cipherdrive/users:/mnt/Centauri/cipherdrive/users
+      - /mnt/Centauri/cipherdrive/shares:/mnt/Centauri/cipherdrive/shares
+      - /mnt/Centauri/cipherdrive/uploads:/mnt/Centauri/cipherdrive/uploads
+      - /mnt/Centauri/cipherdrive/ssl:/mnt/Centauri/cipherdrive/ssl
+      
+      # Also mount to expected application paths
       - /mnt/Centauri/cipherdrive/uploads:/data/uploads
       - /mnt/Centauri/cipherdrive/shares:/data/shares
-      
-      # Logs on SSD for performance
       - /mnt/app-pool/cipherdrive/logs:/app/logs
-      
-      # SSL certificates (if needed)
-      - /mnt/Centauri/cipherdrive/ssl:/app/ssl
       
       # Optional media mounts (read-only)
       - /mnt/Centauri/movies:/data/movies:ro

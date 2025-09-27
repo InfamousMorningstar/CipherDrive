@@ -45,8 +45,11 @@ async def lifespan(app: FastAPI):
     logger.info("CipherDrive backend starting up...")
     
     try:
-        # Check and create required directories
-        startup_directory_check()
+        # Check and create required directories (optional based on env var)
+        if os.getenv("SKIP_DIRECTORY_CHECK", "false").lower() != "true":
+            startup_directory_check()
+        else:
+            logger.info("Directory check skipped (SKIP_DIRECTORY_CHECK=true)")
         
         # Create database tables
         create_tables()
