@@ -30,13 +30,19 @@ services:
 
   # FastAPI Backend
   backend:
-    build:
-      context: https://github.com/InfamousMorningstar/CipherDrive.git
-      dockerfile: backend/Dockerfile
-      args:
-        BUILDKIT_CONTEXT_KEEP_GIT_DIR: 1
+    image: python:3.11-slim
     container_name: cipherdrive_backend
     restart: unless-stopped
+    working_dir: /app
+    command: >
+      bash -c "
+        apt-get update && apt-get install -y curl libpq-dev gcc g++ libmagic1 git &&
+        git clone https://github.com/InfamousMorningstar/CipherDrive.git /tmp/repo &&
+        cp -r /tmp/repo/backend/* /app/ &&
+        pip install --no-cache-dir -r requirements.txt &&
+        python -c 'from database import create_tables; create_tables()' &&
+        uvicorn main:app --host 0.0.0.0 --port 8000
+      "
     environment:
       # Database Configuration
       DATABASE_URL: postgresql://${POSTGRES_USER:-cipherdrive_user}:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB:-cipherdrive_db}
@@ -98,7 +104,7 @@ services:
       interval: 30s
       timeout: 10s
       retries: 3
-      start_period: 60s
+      start_period: 120s
     logging:
       driver: "json-file"
       options:
@@ -109,14 +115,20 @@ services:
 
   # React Frontend
   frontend:
-    build:
-      context: https://github.com/InfamousMorningstar/CipherDrive.git
-      dockerfile: frontend/Dockerfile
-      args:
-        VITE_API_BASE_URL: ${VITE_API_BASE_URL:-/api}
-        BUILDKIT_CONTEXT_KEEP_GIT_DIR: 1
+    image: node:18-alpine
     container_name: cipherdrive_frontend
     restart: unless-stopped
+    working_dir: /app
+    command: >
+      sh -c "
+        apk add --no-cache git nginx curl &&
+        git clone https://github.com/InfamousMorningstar/CipherDrive.git /tmp/repo &&
+        cp -r /tmp/repo/frontend/* /app/ &&
+        npm ci &&
+        npm run build &&
+        cp /tmp/repo/frontend/nginx.conf /etc/nginx/http.d/default.conf &&
+        nginx -g 'daemon off;'
+      "
     environment:
       NODE_ENV: production
       VITE_API_BASE_URL: ${VITE_API_BASE_URL:-/api}
@@ -129,7 +141,7 @@ services:
       interval: 30s
       timeout: 10s
       retries: 3
-      start_period: 30s
+      start_period: 60s
     logging:
       driver: "json-file"
       options:
