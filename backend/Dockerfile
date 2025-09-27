@@ -23,6 +23,9 @@ RUN pip install --no-cache-dir --upgrade pip && \
 # Copy application code
 COPY backend/ .
 
+# Make startup script executable
+RUN chmod +x start.sh
+
 # Create directories and set permissions
 RUN mkdir -p /app/config /data/users /data/shares /data/uploads
 
@@ -40,5 +43,5 @@ EXPOSE 8000
 HEALTHCHECK --interval=30s --timeout=10s --start-period=60s --retries=3 \
     CMD curl -f http://localhost:8000/health || exit 1
 
-# Run the application with auto-reload disabled for production
-CMD ["python", "-m", "uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000", "--workers", "2"]
+# Run the application with startup script
+CMD ["./start.sh"]

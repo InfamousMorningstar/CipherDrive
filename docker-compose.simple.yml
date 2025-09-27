@@ -40,8 +40,10 @@ services:
         git clone https://github.com/InfamousMorningstar/CipherDrive.git /tmp/repo &&
         cp -r /tmp/repo/backend/* /app/ &&
         pip install --no-cache-dir -r requirements.txt &&
-        python -c 'from database import create_tables; create_tables()' &&
-        uvicorn main:app --host 0.0.0.0 --port 8000
+        cd /app &&
+        export PYTHONPATH=/app:$PYTHONPATH &&
+        python -c 'from database import create_tables; create_tables()' || echo 'DB init failed, continuing...' &&
+        python -m uvicorn main:app --host 0.0.0.0 --port 8000 --workers 1
       "
     environment:
       # Database Configuration
