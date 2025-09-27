@@ -153,7 +153,7 @@ const SharedFileView = () => {
                 Shared File
               </h1>
               <p className="text-blue-100 text-sm mt-1">
-                Dropbox Lite
+                CipherDrive
               </p>
             </div>
           </div>
@@ -246,7 +246,7 @@ const SharedFileView = () => {
                 {/* Security Notice */}
                 <div className="text-center text-xs text-gray-500 dark:text-gray-400 pt-4 border-t border-gray-200 dark:border-gray-700">
                   <p>
-                    This file was shared securely via Dropbox Lite.
+                    This file was shared securely via CipherDrive.
                     <br />
                     Only download files from trusted sources.
                   </p>

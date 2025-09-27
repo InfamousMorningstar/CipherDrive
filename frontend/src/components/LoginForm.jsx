@@ -1,12 +1,13 @@
 import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { motion } from 'framer-motion'
-import { EyeIcon, EyeSlashIcon, CloudIcon } from '@heroicons/react/24/outline'
+import { EyeIcon, EyeSlashIcon, ComputerDesktopIcon } from '@heroicons/react/24/outline'
 import toast from 'react-hot-toast'
 
 import { useAuthStore } from '../store/authStore'
 import { useThemeStore } from '../store/themeStore'
 import { validateEmail } from '../utils/helpers'
+import MatrixBackground from './MatrixBackground'
 
 const LoginForm = () => {
   const [email, setEmail] = useState('')
@@ -57,211 +58,228 @@ const LoginForm = () => {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-gray-900 dark:to-gray-800">
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
+    <div className="min-h-screen bg-dark-bg text-dark-text-primary relative overflow-hidden">
+      {/* Matrix Background */}
+      <MatrixBackground />
+      
+      {/* Navigation */}
+      <motion.nav 
+        className="absolute top-0 left-0 right-0 z-20 flex justify-between items-center p-6"
+        initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5 }}
-        className="max-w-md w-full"
+        transition={{ duration: 0.6 }}
       >
-        {/* Theme Toggle */}
-        <div className="flex justify-end mb-4">
-          <button
-            onClick={toggleTheme}
-            className="p-2 rounded-lg bg-white dark:bg-gray-800 shadow-md hover:shadow-lg transition-all duration-200"
-            title={isDark ? 'Switch to light mode' : 'Switch to dark mode'}
-          >
-            {isDark ? '☀️' : '🌙'}
-          </button>
-        </div>
+        <Link to="/" className="flex items-center space-x-2">
+          <ComputerDesktopIcon className="h-8 w-8 text-cipher-teal-400" />
+          <span className="font-mono text-xl font-bold">CipherDrive</span>
+        </Link>
+      </motion.nav>
 
-        <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl p-8">
-          {/* Header */}
-          <div className="text-center mb-8">
-            <motion.div
-              initial={{ scale: 0 }}
-              animate={{ scale: 1 }}
-              transition={{ delay: 0.2, type: "spring", stiffness: 200 }}
-              className="mx-auto h-16 w-16 bg-gradient-to-r from-blue-500 to-indigo-600 rounded-xl flex items-center justify-center mb-4"
-            >
-              <CloudIcon className="h-8 w-8 text-white" />
-            </motion.div>
-            
-            <motion.h1
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.3 }}
-              className="text-3xl font-bold text-gray-900 dark:text-white mb-2"
-            >
-              Dropbox Lite
-            </motion.h1>
-            
-            <motion.p
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.4 }}
-              className="text-gray-600 dark:text-gray-400"
-            >
-              Secure file sharing made simple
-            </motion.p>
-          </div>
-
-          {!showForgotPassword ? (
-            /* Login Form */
-            <motion.form
-              initial={{ opacity: 0, x: -20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: 0.5 }}
-              onSubmit={handleSubmit}
-              className="space-y-6"
-            >
-              <div>
-                <label htmlFor="email" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                  Email Address
-                </label>
-                <input
-                  id="email"
-                  name="email"
-                  type="email"
-                  autoComplete="email"
-                  required
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  className="input-primary"
-                  placeholder="Enter your email"
+      {/* Login Form */}
+      <div className="relative z-10 flex items-center justify-center min-h-screen px-4 sm:px-6 lg:px-8">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8 }}
+          className="max-w-md w-full"
+        >
+          {/* Login Card */}
+          <div className="bg-dark-card border border-cipher-border rounded-2xl p-8 backdrop-blur-sm">
+            {/* Header */}
+            <div className="text-center mb-8">
+              <motion.div
+                initial={{ scale: 0 }}
+                animate={{ scale: 1 }}
+                transition={{ delay: 0.2, type: "spring", stiffness: 200 }}
+                className="mx-auto h-16 w-16 bg-gradient-to-r from-cipher-teal-400 to-cipher-purple-400 rounded-xl flex items-center justify-center mb-4 relative"
+              >
+                <motion.div
+                  className="absolute inset-0 rounded-xl bg-cipher-purple-glow blur-xl opacity-30"
+                  animate={{ 
+                    scale: [1, 1.1, 1],
+                    opacity: [0.3, 0.6, 0.3]
+                  }}
+                  transition={{ 
+                    duration: 2,
+                    repeat: Infinity,
+                    ease: "easeInOut"
+                  }}
                 />
-              </div>
+                <ComputerDesktopIcon className="h-8 w-8 text-white relative z-10" />
+              </motion.div>
+              
+              <motion.h1
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 0.3 }}
+                className="text-3xl font-bold font-mono mb-2"
+              >
+                <span className="bg-gradient-to-r from-cipher-teal-400 to-cipher-purple-400 bg-clip-text text-transparent">
+                  CIPHER
+                </span>
+                <span className="text-white">DRIVE</span>
+              </motion.h1>
+              
+              <motion.p
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 0.4 }}
+                className="text-gray-300 font-mono"
+              >
+                <span className="text-cipher-teal-400">&gt;</span> System Access Required
+              </motion.p>
+            </div>
 
-              <div>
-                <label htmlFor="password" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                  Password
-                </label>
-                <div className="relative">
-                  <input
-                    id="password"
-                    name="password"
-                    type={showPassword ? "text" : "password"}
-                    autoComplete="current-password"
+            {!showForgotPassword ? (
+              /* Login Form */
+              <form onSubmit={handleSubmit} className="space-y-6">
+                <div>
+                  <label htmlFor="email" className="block text-sm font-mono text-gray-300 mb-2">
+                    <span className="text-cipher-teal-400">&gt;</span> Email Address
+                  </label>
+                  <motion.input
+                    whileFocus={{ scale: 1.02 }}
+                    type="email"
+                    id="email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    className="w-full px-4 py-3 bg-dark-bg border border-cipher-border rounded-lg font-mono text-white placeholder-gray-400 focus:outline-none focus:border-cipher-teal-400 focus:ring-2 focus:ring-cipher-teal-400/20 transition-all duration-300"
+                    placeholder="user@cipherdrive.local"
                     required
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    className="input-primary pr-12"
-                    placeholder="Enter your password"
                   />
-                  <button
-                    type="button"
-                    onClick={() => setShowPassword(!showPassword)}
-                    className="absolute inset-y-0 right-0 pr-3 flex items-center"
-                  >
-                    {showPassword ? (
-                      <EyeSlashIcon className="h-5 w-5 text-gray-400" />
-                    ) : (
-                      <EyeIcon className="h-5 w-5 text-gray-400" />
-                    )}
-                  </button>
                 </div>
-              </div>
 
-              <div className="flex items-center justify-between">
-                <div className="text-sm">
+                <div>
+                  <label htmlFor="password" className="block text-sm font-mono text-gray-300 mb-2">
+                    <span className="text-cipher-teal-400">&gt;</span> Password
+                  </label>
+                  <div className="relative">
+                    <motion.input
+                      whileFocus={{ scale: 1.02 }}
+                      type={showPassword ? "text" : "password"}
+                      id="password"
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
+                      className="w-full px-4 py-3 pr-12 bg-dark-bg border border-cipher-border rounded-lg font-mono text-white placeholder-gray-400 focus:outline-none focus:border-cipher-teal-400 focus:ring-2 focus:ring-cipher-teal-400/20 transition-all duration-300"
+                      placeholder="Enter your access code"
+                      required
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setShowPassword(!showPassword)}
+                      className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-cipher-teal-400 transition-colors duration-200"
+                    >
+                      {showPassword ? (
+                        <EyeSlashIcon className="h-5 w-5" />
+                      ) : (
+                        <EyeIcon className="h-5 w-5" />
+                      )}
+                    </button>
+                  </div>
+                </div>
+
+                <div className="flex items-center justify-between text-sm">
                   <button
                     type="button"
                     onClick={() => setShowForgotPassword(true)}
-                    className="text-primary-600 hover:text-primary-500 font-medium"
+                    className="text-cipher-teal-400 hover:text-cipher-teal-300 transition-colors duration-200 font-mono"
                   >
-                    Forgot your password?
+                    <span className="text-gray-400">&gt;</span> Forgot access code?
                   </button>
                 </div>
-              </div>
 
-              <motion.button
-                type="submit"
-                disabled={isLoading}
-                whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.98 }}
-                className={`w-full btn-primary ${isLoading ? 'opacity-75 cursor-not-allowed' : ''}`}
-              >
-                {isLoading ? (
-                  <div className="flex items-center justify-center">
-                    <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-2"></div>
-                    Signing in...
-                  </div>
-                ) : (
-                  'Sign In'
-                )}
-              </motion.button>
-            </motion.form>
-          ) : (
-            /* Forgot Password Form */
-            <motion.form
-              initial={{ opacity: 0, x: 20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.3 }}
-              onSubmit={handleForgotPassword}
-              className="space-y-6"
-            >
-              <div className="text-center mb-6">
-                <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-2">
-                  Reset Your Password
-                </h3>
-                <p className="text-sm text-gray-600 dark:text-gray-400">
-                  Enter your email address and we'll send you a link to reset your password.
-                </p>
-              </div>
-
-              <div>
-                <label htmlFor="resetEmail" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                  Email Address
-                </label>
-                <input
-                  id="resetEmail"
-                  name="resetEmail"
-                  type="email"
-                  autoComplete="email"
-                  required
-                  value={resetEmail}
-                  onChange={(e) => setResetEmail(e.target.value)}
-                  className="input-primary"
-                  placeholder="Enter your email"
-                />
-              </div>
-
-              <div className="flex space-x-3">
-                <button
-                  type="button"
-                  onClick={() => {
-                    setShowForgotPassword(false)
-                    setResetEmail('')
-                  }}
-                  className="flex-1 btn-secondary"
-                >
-                  Cancel
-                </button>
                 <motion.button
                   type="submit"
+                  disabled={isLoading}
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
-                  className="flex-1 btn-primary"
+                  className="w-full py-3 px-4 bg-gradient-to-r from-cipher-teal-400 to-cipher-purple-400 text-white font-mono font-bold rounded-lg hover:shadow-lg hover:shadow-cipher-teal-400/25 focus:outline-none focus:ring-2 focus:ring-cipher-teal-400/50 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 relative overflow-hidden"
                 >
-                  Send Reset Link
+                  <motion.div
+                    className="absolute inset-0 bg-white opacity-0"
+                    whileHover={{ opacity: 0.1 }}
+                    transition={{ duration: 0.3 }}
+                  />
+                  <span className="relative z-10 flex items-center justify-center">
+                    {isLoading ? (
+                      <>
+                        <motion.div
+                          animate={{ rotate: 360 }}
+                          transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+                          className="w-5 h-5 border-2 border-white border-t-transparent rounded-full mr-2"
+                        />
+                        Authenticating...
+                      </>
+                    ) : (
+                      <>
+                        <span className="mr-2">&gt;</span>
+                        Initialize Access
+                      </>
+                    )}
+                  </span>
                 </motion.button>
-              </div>
-            </motion.form>
-          )}
+              </form>
+            ) : (
+              /* Forgot Password Form */
+              <form onSubmit={handleForgotPassword} className="space-y-6">
+                <div>
+                  <h3 className="text-lg font-mono font-bold text-white mb-4">
+                    <span className="text-cipher-teal-400">&gt;</span> Password Recovery
+                  </h3>
+                  <label htmlFor="resetEmail" className="block text-sm font-mono text-gray-300 mb-2">
+                    Email Address
+                  </label>
+                  <motion.input
+                    whileFocus={{ scale: 1.02 }}
+                    type="email"
+                    id="resetEmail"
+                    value={resetEmail}
+                    onChange={(e) => setResetEmail(e.target.value)}
+                    className="w-full px-4 py-3 bg-dark-bg border border-cipher-border rounded-lg font-mono text-white placeholder-gray-400 focus:outline-none focus:border-cipher-teal-400 focus:ring-2 focus:ring-cipher-teal-400/20 transition-all duration-300"
+                    placeholder="user@cipherdrive.local"
+                    required
+                  />
+                </div>
 
-          {/* Footer */}
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.6 }}
-            className="mt-8 pt-6 border-t border-gray-200 dark:border-gray-700"
-          >
-            <p className="text-center text-sm text-gray-500 dark:text-gray-400">
-              © 2025 Dropbox Lite. Secure file sharing solution.
-            </p>
-          </motion.div>
-        </div>
-      </motion.div>
+                <div className="flex space-x-4">
+                  <motion.button
+                    type="button"
+                    onClick={() => setShowForgotPassword(false)}
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                    className="flex-1 py-3 px-4 border border-cipher-border text-gray-300 font-mono rounded-lg hover:bg-cipher-border/20 focus:outline-none focus:ring-2 focus:ring-cipher-border/50 transition-all duration-300"
+                  >
+                    <span className="mr-2">&lt;</span>
+                    Back
+                  </motion.button>
+                  
+                  <motion.button
+                    type="submit"
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                    className="flex-1 py-3 px-4 bg-gradient-to-r from-cipher-teal-400 to-cipher-purple-400 text-white font-mono font-bold rounded-lg hover:shadow-lg hover:shadow-cipher-teal-400/25 focus:outline-none focus:ring-2 focus:ring-cipher-teal-400/50 transition-all duration-300"
+                  >
+                    <span className="mr-2">&gt;</span>
+                    Send Reset
+                  </motion.button>
+                </div>
+              </form>
+            )}
+
+            {/* Footer */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.6 }}
+              className="mt-6 text-center"
+            >
+              <p className="text-gray-400 font-mono text-sm">
+                CipherDrive v1.0.0-alpha | Secure • Private • Fast
+              </p>
+            </motion.div>
+          </div>
+        </motion.div>
+      </div>
     </div>
   )
 }

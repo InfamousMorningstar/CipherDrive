@@ -56,7 +56,7 @@ const Dashboard = () => {
                 <CloudIcon className="h-5 w-5 text-white" />
               </div>
               <h1 className="text-xl font-bold text-gray-900 dark:text-white">
-                Dropbox Lite
+                CipherDrive
               </h1>
             </div>
 

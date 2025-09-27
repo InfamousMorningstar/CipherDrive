@@ -1,6 +1,6 @@
 # TrueNAS SCALE Deployment Guide
 
-This guide provides detailed instructions for deploying Dropbox Lite on TrueNAS SCALE using Portainer.
+This guide provides detailed instructions for deploying CipherDrive on TrueNAS SCALE using Portainer.
 
 ## Prerequisites
 
@@ -16,15 +16,15 @@ This guide provides detailed instructions for deploying Dropbox Lite on TrueNAS 
 1. **Create Dataset**
    ```
    Storage → Pools → Create Dataset
-   Name: dropbox-lite
-   Path: /mnt/your-pool/dropbox-lite
+   Name: cipherdrive
+   Path: /mnt/your-pool/cipherdrive
    ```
 
 2. **Create Subdirectories**
    - Navigate to System → Shell
    ```bash
-   mkdir -p /mnt/your-pool/dropbox-lite/{postgres,uploads,ssl}
-   chmod -R 755 /mnt/your-pool/dropbox-lite
+   mkdir -p /mnt/your-pool/cipherdrive/{postgres,uploads,ssl}
+   chmod -R 755 /mnt/your-pool/cipherdrive
    ```
 
 ### 2. Access Portainer
@@ -37,7 +37,7 @@ This guide provides detailed instructions for deploying Dropbox Lite on TrueNAS 
 ### 3. Create Docker Network
 
 1. In Portainer, go to Networks → Add network
-   - Name: `dropbox-lite-network`
+   - Name: `cipherdrive-network`
    - Driver: bridge
    - Click "Create the network"
 
@@ -46,7 +46,7 @@ This guide provides detailed instructions for deploying Dropbox Lite on TrueNAS 
 1. **Navigate to Stacks**
    - Click "Stacks" in the left sidebar
    - Click "Add stack"
-   - Name: `dropbox-lite`
+   - Name: `cipherdrive`
 
 2. **Stack Configuration**
    Copy and paste the following docker-compose configuration:
@@ -57,19 +57,19 @@ version: '3.8'
 services:
   postgres:
     image: postgres:15
-    container_name: dropbox-lite-postgres
+    container_name: cipherdrive-postgres
     environment:
-      POSTGRES_USER: dropbox_user
+      POSTGRES_USER: cipherdrive_user
       POSTGRES_PASSWORD: change_this_secure_password_123
-      POSTGRES_DB: dropbox_lite
+      POSTGRES_DB: cipherdrive_db
       PGDATA: /var/lib/postgresql/data/pgdata
     volumes:
-      - /mnt/your-pool/dropbox-lite/postgres:/var/lib/postgresql/data
+      - /mnt/your-pool/cipherdrive/postgres:/var/lib/postgresql/data
     networks:
-      - dropbox-lite-network
+      - cipherdrive-network
     restart: unless-stopped
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U dropbox_user -d dropbox_lite"]
+      test: ["CMD-SHELL", "pg_isready -U cipherdrive_user -d cipherdrive_db"]
       interval: 30s
       timeout: 10s
       retries: 5
@@ -77,13 +77,13 @@ services:
 
   backend:
     image: python:3.11-slim
-    container_name: dropbox-lite-backend
+    container_name: cipherdrive-backend
     working_dir: /app
     depends_on:
       postgres:
         condition: service_healthy
     environment:
-      DATABASE_URL: postgresql://dropbox_user:change_this_secure_password_123@postgres:5432/dropbox_lite
+      DATABASE_URL: postgresql://cipherdrive_user:change_this_secure_password_123@postgres:5432/cipherdrive_db
       JWT_SECRET_KEY: your-super-secure-jwt-secret-key-change-this-in-production
       JWT_REFRESH_SECRET_KEY: your-super-secure-refresh-secret-change-this-too
       ACCESS_TOKEN_EXPIRE_MINUTES: 30
@@ -93,8 +93,8 @@ services:
       MAX_FILE_SIZE: 104857600
       ENVIRONMENT: production
     volumes:
-      - /mnt/your-pool/dropbox-lite/uploads:/app/uploads
-      - /mnt/your-pool/dropbox-lite/backend:/app
+      - /mnt/your-pool/cipherdrive/uploads:/app/uploads
+      - /mnt/your-pool/cipherdrive/backend:/app
     command: |
       bash -c "
         pip install fastapi[all] sqlalchemy psycopg2-binary python-multipart \
@@ -106,7 +106,7 @@ services:
     ports:
       - "8000:8000"
     networks:
-      - dropbox-lite-network
+      - cipherdrive-network
     restart: unless-stopped
     healthcheck:
       test: ["CMD", "python", "-c", "import requests; requests.get('http://localhost:8000/health')"]
@@ -117,14 +117,14 @@ services:
 
   frontend:
     image: node:18-alpine
-    container_name: dropbox-lite-frontend
+    container_name: cipherdrive-frontend
     working_dir: /app
     depends_on:
       - backend
     environment:
       REACT_APP_API_URL: http://your-truenas-ip:8000
     volumes:
-      - /mnt/your-pool/dropbox-lite/frontend:/app
+      - /mnt/your-pool/cipherdrive/frontend:/app
     command: |
       sh -c "
         npm install &&
@@ -137,11 +137,11 @@ services:
     ports:
       - "3000:3000"
     networks:
-      - dropbox-lite-network
+      - cipherdrive-network
     restart: unless-stopped
 
 networks:
-  dropbox-lite-network:
+  cipherdrive-network:
     external: false
 ```
 
@@ -158,7 +158,7 @@ networks:
 Since we're using volume mounts, you need to upload the application files to your TrueNAS server:
 
 1. **Using TrueNAS Web Interface**
-   - Go to Storage → your-pool → dropbox-lite
+   - Go to Storage → your-pool → cipherdrive
    - Create folders: `backend`, `frontend`
    - Upload all backend files to the backend folder
    - Upload all frontend files to the frontend folder
@@ -166,14 +166,14 @@ Since we're using volume mounts, you need to upload the application files to you
 2. **Using SCP/SFTP** (Recommended)
    ```bash
    # From your local machine
-   scp -r backend/ root@your-truenas-ip:/mnt/your-pool/dropbox-lite/
-   scp -r frontend/ root@your-truenas-ip:/mnt/your-pool/dropbox-lite/
+   scp -r backend/ root@your-truenas-ip:/mnt/your-pool/cipherdrive/
+   scp -r frontend/ root@your-truenas-ip:/mnt/your-pool/cipherdrive/
    ```
 
 3. **Using Shell** (if files are already on TrueNAS)
    ```bash
    # In TrueNAS Shell
-   cd /mnt/your-pool/dropbox-lite
+   cd /mnt/your-pool/cipherdrive
    # Copy your application files here
    ```
 
@@ -208,13 +208,13 @@ If you prefer using the TrueNAS SCALE Apps catalog:
 1. **Prepare Chart**
    ```bash
    # Create Helm chart structure
-   mkdir -p dropbox-lite-chart/{templates,charts}
+   mkdir -p cipherdrive-chart/{templates,charts}
    ```
 
 2. **Chart.yaml**
    ```yaml
    apiVersion: v2
-   name: dropbox-lite
+   name: cipherdrive
    description: Secure file sharing platform
    version: 1.0.0
    appVersion: "1.0.0"
@@ -225,16 +225,16 @@ If you prefer using the TrueNAS SCALE Apps catalog:
    postgresql:
      enabled: true
      auth:
-       username: dropbox_user
+       username: cipherdrive_user
        password: secure_password
-       database: dropbox_lite
+       database: cipherdrive_db
    
    backend:
-     image: your-registry/dropbox-lite-backend:latest
+     image: your-registry/cipherdrive-backend:latest
      replicaCount: 1
    
    frontend:
-     image: your-registry/dropbox-lite-frontend:latest
+     image: your-registry/cipherdrive-frontend:latest
      replicaCount: 1
    ```
 
@@ -261,7 +261,7 @@ For better security and SSL:
 
 1. **Install Nginx Proxy Manager** via TrueNAS Apps
 2. **Create Proxy Host**
-   - Domain: `dropbox.yourdomain.com`
+   - Domain: `cipherdrive.yourdomain.com`
    - Forward to: `your-truenas-ip:3000`
    - Enable SSL with Let's Encrypt
 
@@ -273,18 +273,18 @@ Create a monitoring script:
 
 ```bash
 #!/bin/bash
-# /mnt/your-pool/dropbox-lite/health-check.sh
+# /mnt/your-pool/cipherdrive/health-check.sh
 
-echo "Checking Dropbox Lite services..."
+echo "Checking CipherDrive services..."
 
 # Check if containers are running
-docker ps --filter "name=dropbox-lite" --format "table {{.Names}}\t{{.Status}}"
+docker ps --filter "name=cipherdrive" --format "table {{.Names}}\t{{.Status}}"
 
 # Check disk usage
-df -h /mnt/your-pool/dropbox-lite/
+df -h /mnt/your-pool/cipherdrive/
 
 # Check database connection
-docker exec dropbox-lite-postgres pg_isready -U dropbox_user
+docker exec cipherdrive-postgres pg_isready -U cipherdrive_user
 
 echo "Health check complete."
 ```
@@ -293,18 +293,18 @@ echo "Health check complete."
 
 ```bash
 #!/bin/bash
-# /mnt/your-pool/dropbox-lite/backup.sh
+# /mnt/your-pool/cipherdrive/backup.sh
 
-BACKUP_DIR="/mnt/your-pool/backups/dropbox-lite"
+BACKUP_DIR="/mnt/your-pool/backups/cipherdrive"
 DATE=$(date +%Y%m%d_%H%M%S)
 
 mkdir -p $BACKUP_DIR
 
 # Backup database
-docker exec dropbox-lite-postgres pg_dump -U dropbox_user dropbox_lite > $BACKUP_DIR/database_$DATE.sql
+docker exec cipherdrive-postgres pg_dump -U cipherdrive_user cipherdrive_db > $BACKUP_DIR/database_$DATE.sql
 
 # Backup uploads
-tar -czf $BACKUP_DIR/uploads_$DATE.tar.gz /mnt/your-pool/dropbox-lite/uploads
+tar -czf $BACKUP_DIR/uploads_$DATE.tar.gz /mnt/your-pool/cipherdrive/uploads
 
 # Keep only last 7 backups
 find $BACKUP_DIR -name "*.sql" -mtime +7 -delete
@@ -319,10 +319,10 @@ Add to TrueNAS cron jobs:
 
 ```bash
 # Daily backup at 2 AM
-0 2 * * * /mnt/your-pool/dropbox-lite/backup.sh
+0 2 * * * /mnt/your-pool/cipherdrive/backup.sh
 
 # Weekly health check
-0 8 * * 1 /mnt/your-pool/dropbox-lite/health-check.sh
+0 8 * * 1 /mnt/your-pool/cipherdrive/health-check.sh
 ```
 
 ## Troubleshooting TrueNAS Specific Issues
@@ -331,33 +331,33 @@ Add to TrueNAS cron jobs:
 
 ```bash
 # Check container logs
-docker logs dropbox-lite-backend
-docker logs dropbox-lite-frontend
-docker logs dropbox-lite-postgres
+docker logs cipherdrive-backend
+docker logs cipherdrive-frontend
+docker logs cipherdrive-postgres
 
 # Check permissions
-ls -la /mnt/your-pool/dropbox-lite/
-chmod -R 755 /mnt/your-pool/dropbox-lite/
+ls -la /mnt/your-pool/cipherdrive/
+chmod -R 755 /mnt/your-pool/cipherdrive/
 ```
 
 ### Database Issues
 
 ```bash
 # Reset database
-docker stop dropbox-lite-postgres
-rm -rf /mnt/your-pool/dropbox-lite/postgres/*
-docker start dropbox-lite-postgres
+docker stop cipherdrive-postgres
+rm -rf /mnt/your-pool/cipherdrive/postgres/*
+docker start cipherdrive-postgres
 ```
 
 ### Network Connectivity
 
 ```bash
 # Check network
-docker network ls | grep dropbox-lite
-docker network inspect dropbox-lite-network
+docker network ls | grep cipherdrive
+docker network inspect cipherdrive-network
 
 # Test connectivity
-docker exec dropbox-lite-backend ping postgres
+docker exec cipherdrive-backend ping postgres
 ```
 
 ### Performance Issues

@@ -2,6 +2,7 @@ from fastapi import FastAPI, Depends, HTTPException, status, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.security import HTTPBearer
 from sqlalchemy.orm import Session
+from sqlalchemy import text
 from contextlib import asynccontextmanager
 import os
 import asyncio
@@ -9,13 +10,13 @@ import logging
 from datetime import datetime, timezone
 
 # Import database and models
-from database import get_db, create_tables
-from models import User, UserRole, UserQuota
-from security import get_password_hash
-from utils.directories import startup_directory_check
-from utils.ports import get_required_ports, validate_port_configuration
-from utils.audit import log_audit, AuditActions
-from middleware.security import (
+from .database import get_db, create_tables
+from .models import User, UserRole, UserQuota
+from .security import get_password_hash
+from .utils.directories import startup_directory_check
+from .utils.ports import get_required_ports, validate_port_configuration
+from .utils.audit import log_audit, AuditActions
+from .middleware.security import (
     SecurityHeadersMiddleware, 
     RateLimitMiddleware,
     RequestLoggingMiddleware,
@@ -24,11 +25,11 @@ from middleware.security import (
 )
 
 # Import routers
-from routers.auth import router as auth_router
-from routers.users import router as users_router
-from routers.files import router as files_router
-from routers.shares import router as shares_router
-from routers.admin import router as admin_router
+from .routers.auth import router as auth_router
+from .routers.users import router as users_router
+from .routers.files import router as files_router
+from .routers.shares import router as shares_router
+from .routers.admin import router as admin_router
 
 # Configure logging
 logging.basicConfig(
@@ -183,7 +184,7 @@ async def health_check(db: Session = Depends(get_db)):
     """Health check endpoint"""
     try:
         # Check database connection
-        db.execute("SELECT 1")
+        db.execute(text("SELECT 1"))
         
         return {
             "status": "healthy",
